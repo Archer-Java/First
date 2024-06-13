@@ -1,0 +1,96 @@
+import java.util.Scanner;
+
+class Calculator {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите два числа (Арабские (1,2,3...) или Римские (I, II, V...): ");
+        String expression = scanner.nextLine();
+        System.out.println(parse(expression));
+    }
+    public static String parse(String expression) throws Exception {
+        int number1;
+        int number2;
+        String operator; // оператор + - / *
+        String result;
+        boolean isRoman;
+        String[] operands = expression.split("[+\\-*/]");
+        if (operands.length != 2) throw new Exception("Должно быть два числа (операнда)");
+        operator = detectOperation(expression);
+        if (operator == null) throw new Exception("Строка не является математической операцией по условиям программы");
+
+        if (Roman.isRoman(operands[0]) && Roman.isRoman(operands[1])) {
+            //конвертируем оба числа в арабские для вычесления действия
+            number1 = Roman.convertToArabian(operands[0]);
+            number2 = Roman.convertToArabian(operands[1]);
+            isRoman = true;
+        }
+        //если оба числа арабские
+        else if (!Roman.isRoman(operands[0]) && !Roman.isRoman(operands[1])) {
+            number1 = Integer.parseInt(operands[0]);
+            number2 = Integer.parseInt(operands[1]);
+            isRoman = false;
+        }
+        //если одни число римское, а другое - арабское
+        else {
+            throw new Exception("Используются одновременно разные системы счисления");
+        }
+        if (number1 > 10 || number2 > 10) {
+            throw new Exception("Доступные числа: от 1 до 10");
+        }
+        int arabian = calc(number1, number2, operator);
+        if (isRoman) {
+            //римское число меньше 0
+            if (arabian <= 0) {
+                throw new Exception("В римской системе нет отрицательных чисел");
+            }
+            //конвертация из арабского в римское
+            result = Roman.convertToRoman(arabian);
+        } else {
+            //конвертация числа в String
+            result = String.valueOf(arabian);
+        }
+        return result;
+    }
+    static String detectOperation(String expression) {
+        if (expression.contains("+")) return "+";
+        else if (expression.contains("-")) return "-";
+        else if (expression.contains("*")) return "*";
+        else if (expression.contains("/")) return "/";
+        else return null;
+    }
+    static int calc(int a, int b, String operator) {
+        if (operator.equals("+"))
+            return a + b;
+        else if (operator.equals("-"))
+            return a - b;
+        else if (operator.equals("*"))
+            return a * b;
+        else
+            return a / b;
+    }
+}
+class Roman {
+    static String[] romanArray = new String[]{"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+            "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"};
+    public static boolean isRoman(String val) {
+        for (int i = 0; i < romanArray.length; i++) {
+            if (val.equals(romanArray[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public static int convertToArabian(String roman) {
+        for (int i = 0; i < romanArray.length; i++) {
+            if (roman.equals(romanArray[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    public static String convertToRoman(int arabian) {
+        return romanArray[arabian];
+    }
+}
+
+
