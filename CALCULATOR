@@ -5,9 +5,9 @@ class Calculator {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите два числа (Арабские (1,2,3...) или Римские (I, II, V...): ");
         String expression = scanner.nextLine();
-        System.out.println(parse(expression));
+        System.out.println(calc(expression));
     }
-    public static String parse(String expression) throws Exception {
+    public static String calc(String expression) throws Exception {
         int number1;
         int number2;
         String operator; // оператор + - / *
@@ -92,3 +92,5 @@ class Roman {
         return romanArray[arabian];
     }
 }
+
+
